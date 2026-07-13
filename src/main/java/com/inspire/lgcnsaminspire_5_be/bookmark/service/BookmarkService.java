@@ -2,12 +2,15 @@ package com.inspire.lgcnsaminspire_5_be.bookmark.service;
 
 import com.inspire.lgcnsaminspire_5_be.auth.repository.UserRepository;
 import com.inspire.lgcnsaminspire_5_be.bookmark.domain.dto.BookmarkRequestDTO;
+import com.inspire.lgcnsaminspire_5_be.bookmark.domain.dto.BookmarkResponseDTO;
 import com.inspire.lgcnsaminspire_5_be.bookmark.domain.entity.BookmarkEntity;
 import com.inspire.lgcnsaminspire_5_be.bookmark.repository.BookmarkRepository;
 import com.inspire.lgcnsaminspire_5_be.festival.domain.entity.FestivalEntity;
 import com.inspire.lgcnsaminspire_5_be.festival.repository.FestivalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,5 +34,12 @@ public class BookmarkService {
                 .userMemo(null)
                 .build();
         bookmarkRepository.save(bookmark);
+    }
+
+    public List<BookmarkResponseDTO> getBookmark(Long tempUserId) {
+        return bookmarkRepository.findAllByUser_UserId(tempUserId)
+                .stream()
+                .map(BookmarkResponseDTO::fromEntity)
+                .toList();
     }
 }
