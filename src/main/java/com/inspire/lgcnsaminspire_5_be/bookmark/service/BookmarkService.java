@@ -3,12 +3,14 @@ package com.inspire.lgcnsaminspire_5_be.bookmark.service;
 import com.inspire.lgcnsaminspire_5_be.auth.repository.UserRepository;
 import com.inspire.lgcnsaminspire_5_be.bookmark.domain.dto.BookmarkRequestDTO;
 import com.inspire.lgcnsaminspire_5_be.bookmark.domain.dto.BookmarkResponseDTO;
+import com.inspire.lgcnsaminspire_5_be.bookmark.domain.dto.BookmarkUpdateRequestDTO;
 import com.inspire.lgcnsaminspire_5_be.bookmark.domain.entity.BookmarkEntity;
 import com.inspire.lgcnsaminspire_5_be.bookmark.repository.BookmarkRepository;
 import com.inspire.lgcnsaminspire_5_be.festival.domain.entity.FestivalEntity;
 import com.inspire.lgcnsaminspire_5_be.festival.repository.FestivalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -41,5 +43,16 @@ public class BookmarkService {
                 .stream()
                 .map(BookmarkResponseDTO::fromEntity)
                 .toList();
+    }
+
+    @Transactional
+    public void putBookmark(Long userId, Long bookmarkId, BookmarkUpdateRequestDTO request) {
+        BookmarkEntity bookmark = bookmarkRepository.findById(bookmarkId)
+                .orElseThrow(() -> new RuntimeException("북마크를 찾을 수 없습니다."));
+
+        if (!bookmark.getUser().getUserId().equals(userId)) {
+            throw new IllegalStateException("본인의 북마크만 수정할 수 있습니다.");
+        }
+        bookmark.updateUserMemo(request.getUserMemo());
     }
 }

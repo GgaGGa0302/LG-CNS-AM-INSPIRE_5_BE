@@ -28,4 +28,8 @@ public class BookmarkEntity {
     private FestivalEntity festival;
 
     private String userMemo;
+
+    public void updateUserMemo(String userMemo) {
+        this.userMemo = userMemo;
+    }
 }

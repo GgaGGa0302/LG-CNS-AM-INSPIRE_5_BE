@@ -2,7 +2,9 @@ package com.inspire.lgcnsaminspire_5_be.bookmark.controller;
 
 import com.inspire.lgcnsaminspire_5_be.bookmark.domain.dto.BookmarkRequestDTO;
 import com.inspire.lgcnsaminspire_5_be.bookmark.domain.dto.BookmarkResponseDTO;
+import com.inspire.lgcnsaminspire_5_be.bookmark.domain.dto.BookmarkUpdateRequestDTO;
 import com.inspire.lgcnsaminspire_5_be.bookmark.service.BookmarkService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,5 +41,18 @@ public class BookmarkController {
         List<BookmarkResponseDTO> response = bookmarkService.getBookmark(tempUserId);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PutMapping("/bookmark/{bookmarkId}")
+    public ResponseEntity<?> putBookmark(@PathVariable Long bookmarkId,@Valid @RequestBody BookmarkUpdateRequestDTO request) {
+        System.out.println(">>>> debug bookmark Controller putBookmark");
+        System.out.println(">>>> debug bookmark Controller putBookmark params" + bookmarkId);
+        System.out.println(">>>> debug bookmark Controller putBookmark body" + request);
+
+        // 임시 데이터
+        Long tempUserId = 1L;
+        bookmarkService.putBookmark(tempUserId, bookmarkId, request);
+        return ResponseEntity.status(HttpStatus.OK).build();
+
     }
 }
