@@ -55,4 +55,16 @@ public class BookmarkService {
         }
         bookmark.updateUserMemo(request.getUserMemo());
     }
+
+    public void deleteBookmark(Long tempUserId, Long bookmarkId) {
+        System.out.println(">>>> debug comment service delete ");
+        BookmarkEntity bookmark = bookmarkRepository.findById(bookmarkId)
+                .orElseThrow(() -> new RuntimeException(bookmarkId + " Not Exists~~"));
+
+        if (!bookmark.getUser().getUserId().equals(tempUserId)) {
+            throw new IllegalStateException("본인의 북마크만 삭제할 수 있습니다.");
+        }
+
+        bookmarkRepository.delete(bookmark);
+    }
 }

@@ -55,4 +55,15 @@ public class BookmarkController {
         return ResponseEntity.status(HttpStatus.OK).build();
 
     }
+
+    @DeleteMapping("/bookmark/{bookmarkId}")
+    public ResponseEntity<?> deleteBookmark(@PathVariable Long bookmarkId) {
+        System.out.println(">>>> debug bookmark Controller deleteBookmark");
+        System.out.println(">>>> debug bookmark Controller deleteBookmark params" + bookmarkId);
+
+        // 임시 데이터
+        Long tempUserId = 2L;
+        bookmarkService.deleteBookmark(tempUserId, bookmarkId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
