@@ -57,9 +57,8 @@ public class BookmarkService {
     }
 
     public void deleteBookmark(Long tempUserId, Long bookmarkId) {
-        System.out.println(">>>> debug comment service delete ");
         BookmarkEntity bookmark = bookmarkRepository.findById(bookmarkId)
-                .orElseThrow(() -> new RuntimeException(bookmarkId + " Not Exists~~"));
+                .orElseThrow(() -> new RuntimeException("북마크를 찾을 수 없습니다."));
 
         if (!bookmark.getUser().getUserId().equals(tempUserId)) {
             throw new IllegalStateException("본인의 북마크만 삭제할 수 있습니다.");
