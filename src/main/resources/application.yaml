@@ -40,3 +40,12 @@ spring:
 #      port: 6379
 #      password:
 #      timeout: 6000ms
+
+jwt:
+    secret: ${JWT_SECRET_KEY}
+
+# OPEN API
+openapi:
+    serviceKey: ${SERVICE_KEY}
+    callbackUrl: ${CALLBACKURL}
+    dataType: ${TYPE}
