@@ -6,7 +6,6 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -51,7 +50,7 @@ public class UserController {
     }
 
     // 로그인
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> signIn(UserRequestDTO request) {
         System.out.println(">>>> debug user controller signIn ");
         System.out.println(">>>> debug params : " + request);
