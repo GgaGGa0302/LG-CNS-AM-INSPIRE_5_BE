@@ -108,9 +108,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         } catch (Exception e) {
             System.out.println("debug >>>> JwtAuthenticationFilter: 만료되거나 변조된 잘못된 토큰 처리 에러");
-            // 토큰 검증이 실패하면 다음 필터로 진행하기 전에 시큐리티 컨텍스트를 클리어
+            // 토큰 검증이 실패해도 permitAll 경로는 익명으로 통과시키고,
+            // 보호된 경로는 뒤쪽 인가 단계(anyRequest().authenticated())에서 막히도록 위임
             SecurityContextHolder.clearContext();
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 Unauthorized 반환하도록
+            filterChain.doFilter(request, response);
             return;
         }
 

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,11 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.inspire.lgcnsaminspire_5_be.bookmark.domain.entity.BookmarkEntity;
+import com.inspire.lgcnsaminspire_5_be.bookmark.repository.BookmarkRepository;
 import com.inspire.lgcnsaminspire_5_be.festival.domain.dto.FestivalResponseDTO;
+import com.inspire.lgcnsaminspire_5_be.festival.domain.entity.FestivalEntity;
+import com.inspire.lgcnsaminspire_5_be.festival.repository.FestivalRepository;
 import com.inspire.lgcnsaminspire_5_be.openai.service.OpenAiService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,7 +27,8 @@ public class FestivalService {
     private final OpenAiService openAiService;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
-    // private final BookmarkRepository bookmarkRepository; // 찜 기능 구현 시 주입
+    private final FestivalRepository festivalRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     @Value("${openapi.serviceKey}")
     private String key;
@@ -165,10 +171,15 @@ public class FestivalService {
                 boolean isBookmarked = false;
                 Long bookmarkId = null;
                 if (userId != null) {
-                    // 데이터베이스(Repository) 조회로 사용자가 이 contentId를 북마크했는지 확인 로직
-                    // Bookmark bookmark = bookmarkRepository.findByUserIdAndContentId(userId,
-                    // contentId);
-                    // if(bookmark != null) { isBookmarked = true; bookmarkId = bookmark.getId(); }
+                    Optional<FestivalEntity> festivalEntity = festivalRepository.findByContentId(contentId);
+                    if (festivalEntity.isPresent()) {
+                        Optional<BookmarkEntity> bookmark = bookmarkRepository
+                                .findByUser_UserIdAndFestival_FestivalId(userId, festivalEntity.get().getFestivalId());
+                        if (bookmark.isPresent()) {
+                            isBookmarked = true;
+                            bookmarkId = bookmark.get().getBookmarkId();
+                        }
+                    }
                 }
 
                 // 4. 최종 명세서 DTO 포맷에 맞게 빌더 조립 후 반환
@@ -180,6 +191,8 @@ public class FestivalService {
                         .addr(fullAddr)
                         .content(overview) // 개요 데이터 매핑
                         .aiInfo(aiInfo) // AI 가공 데이터 매핑
+                        .isBookmarked(isBookmarked)
+                        .bookmarkId(bookmarkId)
                         .build();
             }
 
