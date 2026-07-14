@@ -63,7 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = header.substring(7);
+        String token = header.substring(7).trim();
         System.out.println("debug >>>> JwtAuthenticationFilter token : " + token);
         System.out.println("debug >>>> JwtAuthenticationFilter token validation ");
         System.out.println("debug >>>> Payload(Claims) == token 추출");
@@ -101,7 +101,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             System.out.println("debug >>>> JwtAuthenticationFilter: Security 인증 객체 생성 완료");
 
             System.out.println("debug >>>> JwtAuthenticationFilter context holder setAuthentication");
-            filterChain.doFilter(request, response);
 
         } catch (Exception e) {
             System.out.println("debug >>>> JwtAuthenticationFilter: 만료되거나 변조된 잘못된 토큰 처리 에러");
