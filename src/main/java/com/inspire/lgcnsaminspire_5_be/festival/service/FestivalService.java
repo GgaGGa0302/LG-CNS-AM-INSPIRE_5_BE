@@ -78,7 +78,7 @@ public class FestivalService {
                         // 공공데이터 JSON 필드명에 맞춰서 가공
                         String contentId = item.path("contentid").asText();
                         String title = item.path("title").asText();
-                        String imageUrl = item.path("firstimage2").asText(); // TourAPI의 썸네일
+                        String imageUrl = item.path("firstimage").asText(); // TourAPI의 썸네일
                         String addr1 = item.path("addr1").asText();
                         String startDate = item.path("eventstartdate").asText();
                         String endDate = item.path("eventenddate").asText();
