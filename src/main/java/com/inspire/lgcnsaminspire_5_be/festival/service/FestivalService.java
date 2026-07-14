@@ -11,13 +11,15 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.inspire.lgcnsaminspire_5_be.festival.domain.FestivalResponseDTO;
+import com.inspire.lgcnsaminspire_5_be.festival.domain.dto.FestivalResponseDTO;
+import com.inspire.lgcnsaminspire_5_be.openai.service.OpenAiService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class FestivalService {
+    private final OpenAiService openAiService;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     // private final BookmarkRepository bookmarkRepository; // 찜 기능 구현 시 주입
@@ -141,7 +143,7 @@ public class FestivalService {
 
                 String title = item.path("title").asText();
                 String region = item.path("lDongRegnCd").asText();
-                String imageUrl = item.path("firstimage2").asText();
+                String imageUrl = item.path("firstimage").asText();
                 String addr1 = item.path("addr1").asText();
                 String addr2 = item.path("addr2").asText();
 
@@ -151,10 +153,10 @@ public class FestivalService {
                 String overview = item.path("overview").asText();
 
                 // AI 추천 정보(aiInfo) 가공 구역
-                String aiInfo = "AI 분석 진행 중입니다.";
+                String aiInfo = "실시간 AI 가이드 정보를 불러올 수 없습니다. 잠시 후 다시 시도해 주세요.";
                 try {
                     // OpenAI Service 또는 ChatGPT Component 연동 시 아래 주석 해제하여 조립
-                    // aiInfo = openAiService.generateFestivalTips(title, overview);
+                    aiInfo = openAiService.generateFestivalTips(title, overview);
                 } catch (Exception e) {
                     System.out.println(">>>> AI 가공 중 에러 발생 (기본값 대체): " + e.getMessage());
                 }

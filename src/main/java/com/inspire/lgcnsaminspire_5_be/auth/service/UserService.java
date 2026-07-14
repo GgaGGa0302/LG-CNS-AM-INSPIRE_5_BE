@@ -4,6 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.inspire.lgcnsaminspire_5_be.auth.domain.dto.UserLoginRequestDTO;
 import com.inspire.lgcnsaminspire_5_be.auth.domain.dto.UserRequestDTO;
 import com.inspire.lgcnsaminspire_5_be.auth.domain.dto.UserResponseDTO;
 import com.inspire.lgcnsaminspire_5_be.auth.domain.entity.UserEntity;
@@ -16,11 +17,6 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
-    /*
-     * spring-security : 평문이 아닌 암호화
-     * jwt : access-token, refresh-token(redis, h2 저장) 발급(jwt)
-     */
 
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
@@ -43,8 +39,7 @@ public class UserService {
         return true;
     }
 
-    // redis token add
-    public UserResponseDTO signIn(UserRequestDTO request) {
+    public UserResponseDTO signIn(UserLoginRequestDTO request) {
         System.out.println(">>>> debug user service signIn ");
 
         // UserRepository loginId로 유저 엔티티 수집

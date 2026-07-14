@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.inspire.lgcnsaminspire_5_be.festival.domain.FestivalResponseDTO;
+import com.inspire.lgcnsaminspire_5_be.festival.domain.dto.FestivalResponseDTO;
 import com.inspire.lgcnsaminspire_5_be.festival.service.FestivalService;
 
 import lombok.RequiredArgsConstructor;
