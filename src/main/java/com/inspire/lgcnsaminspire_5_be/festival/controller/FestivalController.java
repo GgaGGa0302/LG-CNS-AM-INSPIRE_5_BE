@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,21 +40,19 @@ public class FestivalController {
     // 축제상세 조회 API
     // Header: Authorization (선택/필수 여부에 따라 시큐리티 컨텍스트 파싱)
     @GetMapping("/detail")
-    public ResponseEntity<?> getFestivalDetail(@RequestParam(name = "contentId") String contentId) {
+    public ResponseEntity<?> getFestivalDetail(
+            @RequestParam(name = "contentId") String contentId,
+            Authentication authentication) {
         System.out.println(">>>> debug festival controller - getFestivalDetail");
         System.out.println(">>>> debug request param contentId : " + contentId);
 
         Long userId = null;
-
-        // 🌟 SecurityContext에서 직접 인증 객체를 꺼내 userId 파싱하기
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()
-                && !"anonymousUser".equals(authentication.getName())) {
-            // JWT 로그 기반 변환 로직 적용 (필요시 주석 해제)
-            String loginId = authentication.getName();
+                && !"anonymousUser".equals(authentication.getPrincipal())) {
+            userId = (Long) authentication.getPrincipal();
         }
 
-        // 🎯 정제된 userId(2)와 contentId(142080)를 넘겨 상세 정보 조회
+        // 정제된 userId와 contentId를 넘겨 상세 정보 조회
         FestivalResponseDTO response = festivalService.getFestivalDetail(contentId, userId);
         return ResponseEntity.ok(response);
     }
