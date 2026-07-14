@@ -20,6 +20,9 @@ public class BookmarkRequestDTO {
     @NotBlank(message = "지역 정보는 필수입니다.")
     private String region;
 
+    @NotBlank(message = "주소는 필수입니다.")
+    private String addr;
+
     @NotBlank(message = "이미지 URL은 필수입니다.")
     private String imageUrl;
 
@@ -29,11 +32,14 @@ public class BookmarkRequestDTO {
     @NotBlank(message = "AI 요약 정보는 필수입니다.")
     private String aiInfo;
 
+    private String userMemo;
+
     public FestivalEntity toFestivalEntity() {
         return FestivalEntity.builder()
                 .contentId(this.contentId)
                 .title(this.title)
                 .region(this.region)
+                .addr(this.addr)
                 .imageUrl(this.imageUrl)
                 .content(this.content)
                 .aiInfo(this.aiInfo)

@@ -26,6 +26,8 @@ public class FestivalEntity {
     @Column(nullable = false, length = 20)
     private String region;
 
+    private String addr;
+
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 

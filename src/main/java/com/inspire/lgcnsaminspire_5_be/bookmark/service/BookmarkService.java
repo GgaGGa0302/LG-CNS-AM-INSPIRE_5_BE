@@ -33,7 +33,7 @@ public class BookmarkService {
         BookmarkEntity bookmark = BookmarkEntity.builder()
                 .user(userRepository.getReferenceById(userId))
                 .festival(festival)
-                .userMemo(null)
+                .userMemo(dto.getUserMemo())
                 .build();
         bookmarkRepository.save(bookmark);
     }
