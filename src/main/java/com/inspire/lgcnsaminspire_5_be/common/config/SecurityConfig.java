@@ -55,8 +55,7 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/api/auth/signup",
                                 "/api/auth/login",
-                                "/api/festivals/**",
-                                "/api/bookmark/**")
+                                "/api/festivals/**")
                         .permitAll()
                         // .requestMatchers("").authenticated()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()

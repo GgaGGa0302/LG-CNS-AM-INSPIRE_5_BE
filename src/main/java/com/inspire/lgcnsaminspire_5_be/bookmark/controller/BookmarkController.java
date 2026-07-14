@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -22,22 +23,22 @@ public class BookmarkController {
     private final BookmarkService bookmarkService;
 
     @PostMapping("/bookmark")
-    public ResponseEntity<?> createBookmark(@Valid @RequestBody BookmarkRequestDTO request) {
+    public ResponseEntity<?> createBookmark(@Valid @RequestBody BookmarkRequestDTO request, Authentication authentication) {
         System.out.println(">>>> debug bookmark Controller createBookmark");
         System.out.println(">>>> debug params : " + request);
 
-        Long tempUserId = 2L;
-        bookmarkService.createBookmark(tempUserId, request);
+        Long userId = (Long) authentication.getPrincipal();
+        bookmarkService.createBookmark(userId, request);
 
         return buildResponse(HttpStatus.CREATED, "관심 축제로 등록되었습니다.");
     }
 
     @GetMapping("/bookmark")
-    public ResponseEntity<?> getBookmark() {
+    public ResponseEntity<?> getBookmark(Authentication authentication) {
         System.out.println(">>>> debug bookmark Controller getBookmark");
 
-        Long tempUserId = 2L;
-        List<BookmarkResponseDTO> response = bookmarkService.getBookmark(tempUserId);
+        Long userId = (Long) authentication.getPrincipal();
+        List<BookmarkResponseDTO> response = bookmarkService.getBookmark(userId);
 
         Map<String, Object> body = new HashMap<>();
         body.put("status", "success");
@@ -48,24 +49,24 @@ public class BookmarkController {
     @PutMapping("/bookmark/{bookmarkId}")
     public ResponseEntity<?> putBookmark(
             @PathVariable Long bookmarkId,
-            @Valid @RequestBody BookmarkUpdateRequestDTO request) {
+            @Valid @RequestBody BookmarkUpdateRequestDTO request, Authentication authentication) {
         System.out.println(">>>> debug bookmark Controller putBookmark");
         System.out.println(">>>> debug bookmark Controller putBookmark params" + bookmarkId);
         System.out.println(">>>> debug bookmark Controller putBookmark body" + request);
 
-        Long tempUserId = 2L;
-        bookmarkService.putBookmark(tempUserId, bookmarkId, request);
+        Long userId = (Long) authentication.getPrincipal();
+        bookmarkService.putBookmark(userId, bookmarkId, request);
 
         return buildResponse(HttpStatus.OK, "메모가 수정되었습니다.");
     }
 
     @DeleteMapping("/bookmark/{bookmarkId}")
-    public ResponseEntity<?> deleteBookmark(@PathVariable Long bookmarkId) {
+    public ResponseEntity<?> deleteBookmark(@PathVariable Long bookmarkId, Authentication authentication) {
         System.out.println(">>>> debug bookmark Controller deleteBookmark");
         System.out.println(">>>> debug bookmark Controller deleteBookmark params" + bookmarkId);
 
-        Long tempUserId = 2L;
-        bookmarkService.deleteBookmark(tempUserId, bookmarkId);
+        Long userId = (Long) authentication.getPrincipal();
+        bookmarkService.deleteBookmark(userId, bookmarkId);
 
         return buildResponse(HttpStatus.OK, "찜 목록에서 삭제되었습니다.");
     }
