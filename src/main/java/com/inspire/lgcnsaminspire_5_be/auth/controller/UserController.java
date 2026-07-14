@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.inspire.lgcnsaminspire_5_be.auth.domain.dto.UserLoginRequestDTO;
 import com.inspire.lgcnsaminspire_5_be.auth.domain.dto.UserRequestDTO;
 import com.inspire.lgcnsaminspire_5_be.auth.domain.dto.UserResponseDTO;
 import com.inspire.lgcnsaminspire_5_be.auth.service.UserService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -27,7 +29,7 @@ public class UserController {
 
     // 회원가입
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody UserRequestDTO request) {
+    public ResponseEntity<?> signUp(@Valid @RequestBody UserRequestDTO request) {
         System.out.println(">>>> debug user controller signUp ");
         System.out.println(">>>> debug params : " + request);
 
@@ -51,7 +53,7 @@ public class UserController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<?> signIn(UserRequestDTO request) {
+    public ResponseEntity<?> signIn(@Valid @RequestBody UserLoginRequestDTO request) {
         System.out.println(">>>> debug user controller signIn ");
         System.out.println(">>>> debug params : " + request);
 

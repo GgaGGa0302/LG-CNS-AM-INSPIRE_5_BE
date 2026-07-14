@@ -1,4 +1,4 @@
-package com.inspire.lgcnsaminspire_5_be.festival.domain;
+package com.inspire.lgcnsaminspire_5_be.festival.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
