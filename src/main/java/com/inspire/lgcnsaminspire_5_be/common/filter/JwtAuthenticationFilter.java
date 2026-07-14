@@ -79,6 +79,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String loginId = claims.getSubject();
             System.out.println("debug >>>> JwtAuthenticationFilter claims get loginId : " + loginId);
 
+            // 토큰에서 userId 추출
+            Long userId = claims.get("userId", Long.class);
+            System.out.println("debug >>>> JwtAuthenticationFilter claims get userId : " + userId);
+
             // 토큰에서 role 추출
             String role = claims.get("role", String.class);
             System.out.println("debug >>>> JwtAuthenticationFilter claims get role : " + role);
@@ -88,7 +92,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             //
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                    loginId,
+                    userId,
                     null,
                     List.of(() -> "ROLE_" + finalRole));
 
