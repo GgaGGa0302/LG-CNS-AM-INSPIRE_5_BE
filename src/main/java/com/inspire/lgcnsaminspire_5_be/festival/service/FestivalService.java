@@ -123,6 +123,37 @@ public class FestivalService {
     // 축제 상세 조회
     public FestivalResponseDTO getFestivalDetail(String contentId, Long userId) {
         System.out.println(">>>> debug festival service getFestivalDetail");
+
+        // DB에 이미 저장된 축제(찜된 적 있는 축제)라면 TourAPI/OpenAI 호출 없이 DB 값을 그대로 재사용
+        Optional<FestivalEntity> festivalEntity = festivalRepository.findByContentId(contentId);
+        if (festivalEntity.isPresent()) {
+            System.out.println(">>>> debug festival service DB cache hit - TourAPI/AI 호출 생략");
+            FestivalEntity entity = festivalEntity.get();
+
+            boolean isBookmarked = false;
+            Long bookmarkId = null;
+            if (userId != null) {
+                Optional<BookmarkEntity> bookmark = bookmarkRepository
+                        .findByUser_UserIdAndFestival_FestivalId(userId, entity.getFestivalId());
+                if (bookmark.isPresent()) {
+                    isBookmarked = true;
+                    bookmarkId = bookmark.get().getBookmarkId();
+                }
+            }
+
+            return FestivalResponseDTO.builder()
+                    .contentId(entity.getContentId())
+                    .title(entity.getTitle())
+                    .region(entity.getRegion())
+                    .imageUrl(entity.getImageUrl())
+                    .addr(entity.getAddr())
+                    .content(entity.getContent())
+                    .aiInfo(entity.getAiInfo())
+                    .isBookmarked(isBookmarked)
+                    .bookmarkId(bookmarkId)
+                    .build();
+        }
+
         System.out.println(">>>> debug configured endPoint : " + endPoint);
 
         String requestUrl = endPoint
@@ -167,22 +198,8 @@ public class FestivalService {
                     System.out.println(">>>> AI 가공 중 에러 발생 (기본값 대체): " + e.getMessage());
                 }
 
-                // 북마크(찜) 여부 판단 구역
-                boolean isBookmarked = false;
-                Long bookmarkId = null;
-                if (userId != null) {
-                    Optional<FestivalEntity> festivalEntity = festivalRepository.findByContentId(contentId);
-                    if (festivalEntity.isPresent()) {
-                        Optional<BookmarkEntity> bookmark = bookmarkRepository
-                                .findByUser_UserIdAndFestival_FestivalId(userId, festivalEntity.get().getFestivalId());
-                        if (bookmark.isPresent()) {
-                            isBookmarked = true;
-                            bookmarkId = bookmark.get().getBookmarkId();
-                        }
-                    }
-                }
-
                 // 4. 최종 명세서 DTO 포맷에 맞게 빌더 조립 후 반환
+                // DB에 FestivalEntity가 없어서 이 분기에 온 것이므로 북마크될 수 없음
                 return FestivalResponseDTO.builder()
                         .contentId(contentId)
                         .title(title)
@@ -191,8 +208,8 @@ public class FestivalService {
                         .addr(fullAddr)
                         .content(overview) // 개요 데이터 매핑
                         .aiInfo(aiInfo) // AI 가공 데이터 매핑
-                        .isBookmarked(isBookmarked)
-                        .bookmarkId(bookmarkId)
+                        .isBookmarked(false)
+                        .bookmarkId(null)
                         .build();
             }
 
